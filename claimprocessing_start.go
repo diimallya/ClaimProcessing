@@ -220,18 +220,18 @@ func (t *ClaimProcessing) create_claim(stub shim.ChaincodeStubInterface, args []
 	
 	
 	// Build 3 sub-structures inside Claim structure
-	strClaimantDetailsType := `{'claimantid': '}` + claimantId + `', 'claimantname': ',` + claimantName + `'}`
+	strClaimantDetailsType := `{'claimantid': '` + claimantId + `', 'claimantname': '` + claimantName + `'}`
 	
 	//objClaimantDetailsType := ClaimantDetailsType{}
 	//objClaimantDetailsType.ClaimantId = claimantId
 	//objClaimantDetailsType.ClaimantName = claimantname
 	
-	strClaimStateType := `{'claimstatus' '}` + claimStatus + `', 'claimstatuschanged': '` + claimStatusChanged + `'}`
+	strClaimStateType := `{'claimstatus': '` + claimStatus + `', 'claimstatuschanged': '` + claimStatusChanged + `'}`
 	
-	strActorType :=  `{'actorempid': '}` + actorEmpId + `', 'actorname': '` + actorName + `', 'actorrole': '` + actorRole + `', 'actiondescription': '` + actionDesc + `'}`
+	strActorType :=  `{'actorempid': '` + actorEmpId + `', 'actorname': '` + actorName + `', 'actorrole': '` + actorRole + `', 'actiondescription': '` + actionDesc + `'}`
 
 	//Build Claim structure
-	strClaim := `{'claimid': '}` + claimId + `', 'claimdate': '` + claimDate + `', 'claimdescription': '` + claimDesc + `', 'claimantdetails': '` + strClaimantDetailsType + `', 'claimedamount': '` + claimedAmount + `', 'approvedamount': '` + approvedAmount + `', 'claimstate': '` + strClaimStateType + `', 'actordetails': '` + strActorType + `'}`
+	strClaim := `{'claimid': '` + claimId + `', 'claimdate': '` + claimDate + `', 'claimdescription': '` + claimDesc + `', 'claimantdetails': '` + strClaimantDetailsType + `', 'claimedamount': '` + claimedAmount + `', 'approvedamount': '` + approvedAmount + `', 'claimstate': '` + strClaimStateType + `', 'actordetails': '` + strActorType + `'}`
 	
 	err = stub.PutState(claimId, []byte(strClaim))									//store claim with id as key
 	if err != nil {
@@ -344,16 +344,33 @@ func (t *ClaimProcessing) getClaim(stub shim.ChaincodeStubInterface, args []stri
 func (t *ClaimProcessing) getClaimByClaimant(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	var jsonResp string
 	var err error
-
+	var jsonAsBytes []byte
+	
+	
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting name of the var to query")
 	}
 	
-	valAsbytes, err := stub.GetState(claimantIndexMap_Key)									//get the var from chaincode state
+	claimantId := args[0]
+	
+	claimantAsBytes, err := stub.GetState(claimantIndexMap_Key)									//get the var from chaincode state
 	if err != nil {
 		jsonResp = "{\"Error\":\"Failed to get state for claimantIndexMap_Key\"}"
 		return nil, errors.New(jsonResp)
 	}
-
-	return valAsbytes, nil													//send it onward
+	
+	
+	claimantIndexOfTypeMap := make(map[string]ClaimantIndex)
+	json.Unmarshal(claimantAsBytes, &claimantIndexOfTypeMap)
+	
+	// Get a value for a key with `name[key]`.
+	v1,boolvar := claimantIndexOfTypeMap[claimantId]
+	if(boolvar != true){
+		return nil, errors.New("This claimantId does not exist")
+	}else{
+		jsonAsBytes, _ = json.Marshal(v1)
+		
+	}	
+	return jsonAsBytes, nil 
+	
 }
