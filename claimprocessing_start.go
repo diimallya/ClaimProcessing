@@ -226,7 +226,7 @@ func (t *ClaimProcessing) create_claim(stub shim.ChaincodeStubInterface, args []
 	//objClaimantDetailsType.ClaimantId = claimantId
 	//objClaimantDetailsType.ClaimantName = claimantname
 	
-	strClaimStateType := `{"claimantstatus": "}` + claimStatus + `", "claimstatuschanged": "` + claimStatusChanged + `"}`
+	strClaimStateType := `{"claimstatus": "}` + claimStatus + `", "claimstatuschanged": "` + claimStatusChanged + `"}`
 	
 	strActorType :=  `{"actorempid": "}` + actorEmpId + `", "actorname": "` + actorName + `", "actorrole": "` + actorRole + `", "actiondescription": "` + actionDesc + `"}`
 
@@ -325,6 +325,8 @@ func (t *ClaimProcessing) getClaim(stub shim.ChaincodeStubInterface, args []stri
 	}
 	objClaim := Claim{}
 	json.Unmarshal(valAsbytes, &objClaim)
+	
+	return valAsbytes, nil
 	
 	strClaimantDetailsType := `{"claimantid": "}` + objClaim.ClaimantDetails.ClaimantId + `", "claimantname": ",` +  objClaim.ClaimantDetails.ClaimantName + `"}`
 	
