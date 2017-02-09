@@ -427,6 +427,7 @@ func (t *ClaimProcessing) update_Claim(stub shim.ChaincodeStubInterface, args []
 	strStateHistoryType := `{"claimstatus": "` + claimStatus + `", "claimstatuschanged": "` + claimStatusChanged + `", "actorname": "` + actorName + `", "actiondescription": "` + actionDesc + `"}`
 	err = json.Unmarshal([]byte(strStateHistoryType), &varStateHistory) // Convert the value to be appeneded to JSON
 	//Build Claim structure
+	fmt.Println("Current varStateHistory.ClaimStatus----->" + varStateHistory.ClaimStatus)
 	
 	
 	valAsbytes, err := stub.GetState(claimId)		
@@ -439,8 +440,12 @@ func (t *ClaimProcessing) update_Claim(stub shim.ChaincodeStubInterface, args []
 	json.Unmarshal(valAsbytes, &varClaim)
 	varStatesHistory = varClaim.StatesHistory	//get the current value of StatesHistory array and then append
 	
+	fmt.Println("varStatesHistory[0].ClaimStatus-------->"+varStatesHistory[0].ClaimStatus)
+	
 	varStatesHistory = append(varStatesHistory, varStateHistory) // append the current state to array
 	
+	fmt.Println("varStatesHistory[0].ClaimStatus-------->"+varStatesHistory[0].ClaimStatus)
+	fmt.Println("varStatesHistory[1].ClaimStatus-------->"+varStatesHistory[0].ClaimStatus)
 	
 	strStatesHistory, _ := json.Marshal(varStatesHistory);
 	
