@@ -266,7 +266,7 @@ func (t *ClaimProcessing) create_Claim(stub shim.ChaincodeStubInterface, args []
 	
 	strActorType :=  `{"actorempid": "` + actorEmpId + `", "actorname": "` + actorName + `", "actorrole": "` + actorRole + `", "actiondescription": "` + actionDesc + `"}`
 	
-	strStateHistoryType := `{"claimstatus": "` + claimStatus + `", "claimstatuschanged": "` + claimStatusChanged + `", "actorname": "` + actorName + `", "actiondescription": "` + actionDesc + `"}`
+	strStateHistoryType := `[{"claimstatus": "` + claimStatus + `", "claimstatuschanged": "` + claimStatusChanged + `", "actorname": "` + actorName + `", "actiondescription": "` + actionDesc + `"}]`
 
 	//Build Claim structure
 	strClaim := `{"claimid": "` + claimId + `", "claimdate": "` + claimDate + `", "claimdescription": "` + claimDesc + `", "claimantdetails": ` + strClaimantDetailsType + `, "claimedamount": "` + claimedAmount + `", "approvedamount": "` + approvedAmount + `", "claimstate": ` + strClaimStateType + `, "actordetails": ` + strActorType + `, "stateshistory": `+ strStateHistoryType +`}`
