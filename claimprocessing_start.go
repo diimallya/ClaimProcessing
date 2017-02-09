@@ -445,7 +445,7 @@ func (t *ClaimProcessing) update_Claim(stub shim.ChaincodeStubInterface, args []
 	varStatesHistory = append(varStatesHistory, varStateHistory) // append the current state to array
 	
 	fmt.Println("varStatesHistory[0].ClaimStatus-------->"+varStatesHistory[0].ClaimStatus)
-	fmt.Println("varStatesHistory[1].ClaimStatus-------->"+varStatesHistory[0].ClaimStatus)
+	fmt.Println("varStatesHistory[1].ClaimStatus-------->"+varStatesHistory[1].ClaimStatus)
 	
 	strStatesHistory, _ := json.Marshal(varStatesHistory);
 	
